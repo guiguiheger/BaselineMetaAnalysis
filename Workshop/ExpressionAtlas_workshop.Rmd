@@ -1,0 +1,148 @@
+
+---
+title: "Expression Atlas Workshop"
+output: html_notebook
+---
+Suhaib Mohammed
+2017-10-26
+
+```{r}
+## loading Expression Atlas package
+if (!require('ExpressionAtlas')) {
+  source("https://bioconductor.org/biocLite.R")
+  biocLite('ExpressionAtlas'); 
+suppressMessages(library('ExpressionAtlas'))
+}
+
+## get differential expriment from exression atlas data - E-MTAB-4902
+atlasData <- getAtlasData(c("E-MTAB-4902"))
+```
+
+```{r}
+## extract expression dataa and meta data from RangedSummarizedExperiment object
+  atlasData
+  all <- vector()
+  expAcc <- names(atlasData)
+  k <- atlasData[[expAcc]]
+  exp <- k$rnaseq
+  eCounts <- assays(exp)$counts
+
+## sanity check of expression data
+head(eCounts)
+
+## number of genes and samples
+dim(eCounts)
+```
+```{r}
+# log distbution of the expression data
+hist(log(eCounts+1), breaks=30, main = "Distrubution of raw-counts", col="cornflowerblue")
+```
+
+
+
+```{r}
+# differential expression amnalysis
+if (!require('DESeq2')) {
+  source("https://bioconductor.org/biocLite.R")
+  biocLite("DESeq2"); 
+suppressMessages(library('DESeq2'))
+}
+
+ddsMat <- DESeqDataSetFromMatrix(eCounts, colData=data.frame(colData(exp)), design = ~ disease )
+
+# estimating factors
+dds <- estimateSizeFactors(ddsMat)
+
+# Pre-filtering
+dds <- dds[ rowSums(counts(dds)) > 1, ]
+
+# Transforming data
+rld <- rlogTransformation(ddsMat)
+head(assay(rld))
+
+##  dist calculates distances between data rows
+##  and our samples constitute the columns.
+sampledist <- dist(t(assay(rld)))
+
+
+
+## Quality control of samples
+#####################################################
+# heatmap for sample distance
+if (!require('RColorBrewer')) {
+  install.packages("RColorBrewer"); 
+library('RColorBrewer')
+}
+if (!require('gplots')) {
+  install.packages("gplots"); 
+library('gplots')
+}
+sampledistmat <- as.matrix(sampledist)
+colors <- colorRampPalette( rev(brewer.pal(9, "Blues")) )(555)
+hc <- hclust(sampledist)
+hmcol <- colorRampPalette(brewer.pal(9, "GnBu"))(100)
+
+## simple Hierarchical clustering of samples
+plot(hclust(sampledist),xlab="samples ID", main= "Sample cluster dendogram")
+
+## Principle-component analysis (PCA) allows us to visualise the variability between the samples 
+## by reducing high-dimensional datasets to a low dimensional two-dimensional plot. 
+plotPCA(rld, intgroup = c("disease"))
+
+## Consistent to PCA, the hierarchical clustering (HC) of dataset represented by heatmap allows us to visualise pairwise 
+## sample to sample distance that depicts the association of between samples that show similar and dissimilar characteristics
+heatmap.2(sampledistmat, col = rev(hmcol), key = TRUE,
+          trace = "none",margins=c(8,10))
+```
+```{r}
+
+
+#####################################################
+## Diffential expression alaysis
+#####################################################
+### Disease vs Normal
+
+dds<- DESeq(dds)
+## comparing differentuial genes for DGF over No DGF
+res<- results(dds,contrast=c("disease","visceral Leishmaniasis","normal"))
+
+mcols(res, use.names=TRUE)
+summary(res)
+res.padj <- res[order(res$padj), ]
+
+## FDR set to 10% and logfoldchange > or < 1
+sig <- subset(res.padj, res.padj$padj <= 0.1 & abs(res.padj$log2FoldChange) >=2 )
+
+## top differential gene signatures
+sig
+
+```
+
+```{r}
+# MA plot at fdr-10%
+plotMA(res, main="MA plot - Normal vs. Disease, FDR=10%", alpha=0.1)
+
+## identifying top differentila genes
+## and plotting heatmap with clusering
+topVarGenes <-rownames(sig)
+exp<-counts(dds)[topVarGenes,]
+mat <- exp - rowMeans(exp)
+
+df <- as.data.frame(colData(rld)[,c("disease")])
+colnames(df)=c('disease')
+df$disease<-gsub(" ","_",df$disease)
+rownames(df)<-colnames(mat)
+
+# Specify colors
+ann_colors = list(
+  disease= c(visceral_Leishmaniasis="darkgreen", normal="yellow"))
+
+if (!require('pheatmap')) {
+  install.packages("pheatmap"); 
+library('pheatmap')
+}
+
+p<-pheatmap(mat, scale='row', show_rownames = FALSE, color = colorRampPalette(c("navy", "white", "firebrick3"))(13),
+         annotation_col=df, annotation_colors =  ann_colors, silent = TRUE, main= "Heatmap - top differential genes")
+plot(p$gtable)
+```

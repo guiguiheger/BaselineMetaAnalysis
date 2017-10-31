@@ -1,5 +1,7 @@
 #!/usr/bin/env Rscript
 
+# Author: Suhaib Mohammed
+
 library( ExpressionAtlas)
 
 ## loading generic functions 
@@ -82,7 +84,6 @@ library(RUVSeq)
 ## making new expression set object for batch effect removal
 set <- newSeqExpressionSet(as.matrix(filtered), phenoData = data.frame(x, row.names=colnames(filtered)))
 
-
 ## color similar tissue types for consistency 
 colors.order<-colorOrder(x)
 
@@ -101,10 +102,6 @@ abline(h=c(2,-2),lty=2, col="blue",lwd=2)
 plotPCA(set, col=colors.order, cex=0.7)
 dev.off()
 
-library(EDASeq)
-library(ggplot2)
-library(ggfortify)
-library(RUVSeq)
 
 # print all object for size check
 for ( object in ls() ){
@@ -123,8 +120,10 @@ dev.off()
 
 ## normalised expression
 dim(normCounts(set.RUVg.bp))
-plot_heatmap(normCounts(set.RUVg.bp), name="Normalised") 
+agg_matrix_norm<-summary_tissues(normCounts(set.RUVg.bp))
+plot_heatmap(agg_matrix_norm, name="Normalised")
 
 # raw expression
 dim(counts(set.RUVg.bp))
-plot_heatmap(counts(set.RUVg.bp), name="Raw")
+agg_matrix_raw<-summary_tissues(counts(set.RUVg.bp))
+plot_heatmap(agg_matrix_raw, name="Raw")

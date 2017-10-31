@@ -1,5 +1,7 @@
 #!/usr/bin/env Rscript
 
+# Author: Suhaib Mohammed
+
 library( ExpressionAtlas)
 
 ## loading generic functions 
@@ -118,8 +120,10 @@ dev.off()
 
 ## normalised expression heatmap
 dim(normCounts(set.RUVg))
-plot_heatmap(normCounts(set.RUVg), name="Normalised") 
+agg_matrix_norm<-summary_tissues(normCounts(set.RUVg))
+plot_heatmap(agg_matrix_norm, name="Normalised")
 
 # raw expression
 dim(counts(set.RUVg)) heatmap
-plot_heatmap(counts(set.RUVg), name="Raw")
+agg_matrix_raw<-summary_tissues(counts(set.RUVg))
+plot_heatmap(agg_matrix_raw, name="Raw")
