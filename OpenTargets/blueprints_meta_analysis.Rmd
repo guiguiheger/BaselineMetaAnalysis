@@ -2,8 +2,8 @@
 title: "BluePrint experiments meta analysis Notebook"
 output: html_notebook
 ---
-
-
+Suhaib Mohammed
+2017-10-26
 
 ```{r fig1, fig.height = 3, fig.width = 3, fig.align = "center"}
 library( ExpressionAtlas)

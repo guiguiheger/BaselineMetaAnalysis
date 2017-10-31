@@ -206,3 +206,35 @@ plot_heatmap<-function(exp, name) {
                          name = "Expression")
 }
 #################################################
+## summarising gene expression across tissues and cell types
+summary_tissues<-function(all.norm){
+  x<-sapply(strsplit(colnames(all.norm), split="_"),"[",3)
+  names <- colnames(all.norm)
+
+  # experiment detailed expression values
+  expNames <- t(as.data.frame(sapply(names, function(x) strsplit(x, "_"))))
+  expNormData <- all.norm
+  colnames(expNormData) <- paste(expNames[,1], expNames[,3], sep="_")
+
+  # summarisation (aggregation) of expression values by median across tissue/cell types
+  expData <-expNormData
+  tissue.names<-sapply(strsplit(colnames(expData),split="_"),"[",2)
+  colnames(expData) <- tissue.names
+  expData <- t(apply(expData, 1, function(x) tapply(x, colnames(expData), median)))
+
+  return (expData)
+}
+#################################################
+## histogram density plot
+plot.hist.dens <- function(exp)
+{
+  exp<-log(exp+1)
+  junk.x = NULL
+  junk.x = c(junk.x, density(exp))
+
+  xr <- range(junk.x$x)
+  yr <- range(junk.x$y)
+  
+  plot(density(exp), xlim = xr, ylim=yr, main = "Density Log-RawCounts", col="red", lwd=2, xlab="log(expression counts)")
+  legend("topright",c("raw-counts"), col=c("red"),lwd=2)
+}
