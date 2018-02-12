@@ -5,8 +5,8 @@
 library(RUVSeq)
 
 ##load expressioinSet objects 
-load("set.RUVg.RData")
-load("set.RUVg.bp.Rdata")
+load("./output/gtex/set.RUVg_gtex.Rdata")
+load("./output/blueprint/set.RUVg_bp.Rdata")
 
 ## loading generic functions 
 source("generic_funcitons.R")
@@ -40,8 +40,8 @@ png(file = paste0(name,".png"), width = 2000, height = 2000, res=180)
 plot_heatmap(expData, name="normalised")
 dev.off()
 
-png(file = paste0("Distribution_Summary_NormCounts.png"), width = 700, height = 700, res=100)
+png(file = paste0("Distribution_Summary_NormCounts_all_gtex_blueprint.png"), width = 700, height = 700, res=100)
 hist(log(expData),freq=FALSE, col="cornflowerblue", breaks =30, xlab="log normalised counts", main = "")
 dev.off()
 
-write.table(expData, file="exp_summary_NormCounts_genes_all_Blueprint2.txt",quote=FALSE, sep="\t")
+write.table(expData, file="exp_summary_NormCounts_genes_all_gtex_blueprint.txt",quote=FALSE, sep="\t")

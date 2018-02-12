@@ -70,7 +70,7 @@ leastVar.genes<-rownames(as.matrix(sort(cov.allGenes[cov.allGenes < quantile(cov
 
 ## plot coefficent of variation against number of genes used to set for negative controls; i.e. genes can assumed not be influened 
 ## by the set of covariate of interest. 
-png(file = paste0("./output//gtex/covRange_threshold.gtex.png"), width = 750, height = 750, res=120);
+png(file = paste0("./output/gtex/covRange_threshold.gtex.png"), width = 750, height = 750, res=120);
 plot(cov.range,ngenes, xlab="Coefficient of Variation",type="b", ylab="Number of genes",pch=16,col="blue",main="")
 abline(v=quantile(cov.range, c(.01))[[1]], lwd=1, col="red")
 legend("bottomright",c("1% quantile"),lty=1, lwd=1, col="red")
