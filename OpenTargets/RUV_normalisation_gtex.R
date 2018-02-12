@@ -31,7 +31,7 @@ dim(all)
 x<-sapply(strsplit(colnames(all),split="_"),"[",3)
 
 
-save(all,x,file="all.RData")
+save(all,x,file="./output//gtex/all_gtex.RData")
 
 ## filtering low expression signals
   filter <- rowSums(all>10)>=15
@@ -43,7 +43,7 @@ save(all,x,file="all.RData")
   
   filtered.genes<-setdiff(rownames(all),rownames(filtered))
 
-  write.table(filtered.genes,file="filtered_genes_GTEx.txt",sep="\t",col.names='NA')
+  write.table(filtered.genes,file="./output/gtex/filtered_genes_gtex.txt",sep="\t",col.names='NA')
 
 ##################################################
 
@@ -70,7 +70,7 @@ leastVar.genes<-rownames(as.matrix(sort(cov.allGenes[cov.allGenes < quantile(cov
 
 ## plot coefficent of variation against number of genes used to set for negative controls; i.e. genes can assumed not be influened 
 ## by the set of covariate of interest. 
-png(file = paste0("covRange_threshold.all.png"), width = 750, height = 750, res=120);
+png(file = paste0("./output//gtex/covRange_threshold.gtex.png"), width = 750, height = 750, res=120);
 plot(cov.range,ngenes, xlab="Coefficient of Variation",type="b", ylab="Number of genes",pch=16,col="blue",main="")
 abline(v=quantile(cov.range, c(.01))[[1]], lwd=1, col="red")
 legend("bottomright",c("1% quantile"),lty=1, lwd=1, col="red")
@@ -89,15 +89,15 @@ colors.order<-colorOrder(x)
 
 library(RColorBrewer)
 colors <- brewer.pal(8, "Set2")
-pdf("unnormalised_all_gtex.pdf", width=18, height=18)
+pdf("./output/gtex/unnormalised_all_gtex.pdf", width=18, height=18)
 plotRLE(set, outline=FALSE, ylim=c(-4, 4), col=colors.order)
 plotPCA(set, col=colors.order, cex=0.7)
 dev.off()
 
 ## upper quartile normalisation
 set <- betweenLaneNormalization(set, which="upper")
-save(set, file="upperqNorm2K.RData")
-pdf("upperQnormalisation_all_gtex.pdf", width=18, height=18)
+save(set, file="./output/gtex/upperqNorm2K_gtex.RData")
+pdf("./output/gtex/upperQnormalisation_gtex.pdf", width=18, height=18)
 plotRLE(set, outline=FALSE, ylim=c(-4, 4), col=colors.order)
 abline(h=c(2,-2),lty=2, col="blue",lwd=2)
 plotPCA(set, col=colors.order, cex=0.7)
@@ -111,8 +111,8 @@ for ( object in ls() ){
 
 #####
 set.RUVg <- RUVg(set, leastVar.genes[1:1000] , k=1)
-save(set.RUVg,file="set.RUVg.Rdata")
-pdf(paste0("RUVgK1.1000.pdf"), width=18, height=18)
+save(set.RUVg,file="./output/gtex/set.RUVg_gtex.Rdata")
+pdf(paste0("./output/gtex/RUVgK1.1000_gtex.pdf"), width=18, height=18)
 plotRLE(set.RUVg, outline=FALSE, ylim=c(-4, 4), col=colors.order)
 abline(h=c(2,-2),lty=2, col="blue",lwd=2)
 plotPCA(set.RUVg, col=colors.order, cex=0.7)
@@ -121,9 +121,9 @@ dev.off()
 ## normalised expression heatmap
 dim(normCounts(set.RUVg))
 agg_matrix_norm<-summary_tissues(normCounts(set.RUVg))
-plot_heatmap(agg_matrix_norm, name="Normalised")
+plot_heatmap(agg_matrix_norm, name="Normalised_gtex")
 
-# raw expression
-dim(counts(set.RUVg)) heatmap
+# raw expression heatmap
+dim(counts(set.RUVg))
 agg_matrix_raw<-summary_tissues(counts(set.RUVg))
-plot_heatmap(agg_matrix_raw, name="Raw")
+plot_heatmap(agg_matrix_raw, name="Raw_gtex")
