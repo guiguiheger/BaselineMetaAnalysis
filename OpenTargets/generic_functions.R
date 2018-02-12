@@ -36,43 +36,43 @@ technical_replicate_average_bp<-function(exp,expAcc,eCounts) {
         for (group in TechRepGroups) {
           ## averaging by taking median expression value for each replicate
           cat("\ntechnical rep found in cell_type - ", cell_type)
-          cat("\naveraging -",expAcc,"-", cell_type, "-", group) 
+         #cat("\naveraging -",expAcc,"-", cell_type, "-", group) 
           avgTechRepCounts<- as.matrix(apply(eCounts[,rownames(cell_type.df[which(cell_type.df$technical_replicate==group),])],1,median))
           colnames(avgTechRepCounts)<- paste(expAcc, group, cell_type, sep="_")
           avgCounts<-cbind(avgCounts,avgTechRepCounts)
-          print(paste0("AvgCounts - colnames",colnames(avgCounts)))
+          #print(paste0("AvgCounts - colnames",colnames(avgCounts)))
         }
       }
       ## combining no tech reps
       if (any(cell_type.df$technical_replicate == "  ")) {
         ## no technical group each assay in an biological replicate
         noTechRepAssayGroups<-cell_type.df[which(cell_type.df$technical_replicate == "  "),"AtlasAssayGroup"]
-        cat("\ncombining experiments that has no technical replicates-",cell_type,"-", noTechRepAssayGroups)
+        #cat("\ncombining experiments that has no technical replicates-",cell_type,"-", noTechRepAssayGroups)
         noTechRepAssayNames<-rownames(cell_type.df[which(cell_type.df$technical_replicate == "  "),])
-        cat("\ncombining assays that has no technical replicates-",  noTechRepAssayNames)
+        #cat("\ncombining assays that has no technical replicates-",  noTechRepAssayNames)
         combCounts<-as.matrix(eCounts[,noTechRepAssayNames])
-        cat("\ncombining -",expAcc,"-", noTechRepAssayNames, cell_type,"\n")
+        #cat("\ncombining -",expAcc,"-", noTechRepAssayNames, cell_type,"\n")
         colnames(combCounts)<- paste(expAcc, noTechRepAssayNames,  cell_type, sep="_")
-        print(paste0("ComCounts - colnames",colnames(combCounts)))
+        #print(paste0("ComCounts - colnames",colnames(combCounts)))
       }
       ## combine non-technical assays with averaged technical replicate assays. 
       ## if any tehnical replicates found
       # cat("\ncombining technical and non-tech replicates\n")
       allCombCounts <- cbind(avgCounts,combCounts)
       allCounts<-cbind(allCounts,allCombCounts)
-      print(paste0("dim =", dim(allCounts)))
-      print(paste0("AllCounts - colnames",colnames(allCounts)))
+      #print(paste0("dim =", dim(allCounts)))
+      #print(paste0("AllCounts - colnames",colnames(allCounts)))
     }
   }
   
   ## combine non-technical assays with averaged technical replicate assays. 
   else if (any(c("individual") %in% colnames(colData(exp)))){
     cat("\nNo technical rep for", expAcc)
-    cat("\ncombining experiment that has no technical replicates")
+    #cat("\ncombining experiment that has no technical replicates")
     noTechRepAssayNames<-rownames(colData(exp))
     noTechRepAssayTissue<-colData(exp)[noTechRepAssayNames,]$cell_type
     allCounts<-as.matrix(eCounts[,noTechRepAssayNames])
-    cat("\ncombining -",expAcc,"-", noTechRepAssayNames, "-", noTechRepAssayTissue,"\n")
+    #cat("\ncombining -",expAcc,"-", noTechRepAssayNames, "-", noTechRepAssayTissue,"\n")
     colnames(allCounts)<- paste(expAcc, noTechRepAssayNames,  noTechRepAssayTissue, sep="_")
   }
   return(allCounts)
@@ -107,8 +107,8 @@ technical_replicate_average_gtex<-function(exp,expAcc) {
         # for each individual tissue for a donor 
         for (tissue in names(which(table(donor.tissues)>1))) {
           ## averaging by taking median expression value for each replicate
-          cat("\ntechnical rep found in donor - ", donor)
-          cat("\naveraging -",expAcc,"-", donor, "-", tissue) 
+          #cat("\ntechnical rep found in donor - ", donor)
+          #cat("\naveraging -",expAcc,"-", donor, "-", tissue) 
           avgTechRepCounts<- as.matrix(apply(eCounts[,rownames(donor.tissues.df[which(tissue==donor.tissues),])],1,median))
           colnames(avgTechRepCounts)<- paste(expAcc, donor,  tissue, sep="_")
           avgCounts<-cbind(avgCounts,avgTechRepCounts)
@@ -120,30 +120,30 @@ technical_replicate_average_gtex<-function(exp,expAcc) {
       ## combining expriments that thas has no technical replicates
       if (any(table(donor.tissues)==1)) {
         noTechRepAssayGroups<-names(which(table(donor.tissues)==1))
-        cat("\ncombining experiments that has no technical replicates-", noTechRepAssayGroups)
+        #cat("\ncombining experiments that has no technical replicates-", noTechRepAssayGroups)
         noTechRepAssayNames<-rownames(donor.tissues.df[match(names(which(table(donor.tissues)==1)), donor.tissues),])
         noTechRepAssayTissue<-donor.tissues.df[noTechRepAssayNames,]$organism_part
         combCounts<-as.matrix(eCounts[,noTechRepAssayNames])
         colnames(combCounts)<-noTechRepAssayNames
-        cat("\ncombining -",expAcc,"-", donor, "-", noTechRepAssayTissue,"\n")
+        #cat("\ncombining -",expAcc,"-", donor, "-", noTechRepAssayTissue,"\n")
         colnames(combCounts)<- paste(expAcc, noTechRepAssayNames,  noTechRepAssayTissue, sep="_")
       }
       
       
       ## combine non-technical assays with averaged technical replicate assays. 
       ## if any tehnical replicates found
-      cat("\ncombining technical replicates\n")
+      #cat("\ncombining technical replicates\n")
       allCounts <- cbind(avgCounts,combCounts)
     }
   }
   ## combine non-technical assays with averaged technical replicate assays. 
   else {
     cat("\nNo technical rep for", expAcc)
-    cat("\ncombining experiment that has no technical replicates")
+    #cat("\ncombining experiment that has no technical replicates")
     noTechRepAssayNames<-rownames(colData(exp))
     noTechRepAssayTissue<-colData(exp)[noTechRepAssayNames,]$organism_part
     allCounts<-as.matrix(eCounts[,noTechRepAssayNames])
-    cat("\ncombining -",expAcc,"-", noTechRepAssayNames, "-", noTechRepAssayTissue,"\n")
+    #cat("\ncombining -",expAcc,"-", noTechRepAssayNames, "-", noTechRepAssayTissue,"\n")
     colnames(allCounts)<- paste(expAcc, noTechRepAssayNames,  noTechRepAssayTissue, sep="_")
   }
   return(allCounts)
