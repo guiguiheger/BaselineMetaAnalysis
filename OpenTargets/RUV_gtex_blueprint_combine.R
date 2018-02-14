@@ -9,7 +9,7 @@ load("./output/gtex/set.RUVg_gtex.Rdata")
 load("./output/blueprint/set.RUVg_bp.Rdata")
 
 ## loading generic functions 
-source("generic_funcitons.R")
+source("generic_functions.R")
 
 ## extracting normalised counts 
 norm.Gtex<-normCounts(set.RUVg)
@@ -36,7 +36,7 @@ tissue.names<-sapply(strsplit(colnames(expData),split="_"),"[",2)
 colnames(expData) <- tissue.names
 expData <- t(apply(expData, 1, function(x) tapply(x, colnames(expData), median)))
 
-png(file = paste0(name,".png"), width = 2000, height = 2000, res=180)
+png(file = paste0("heatmap",".png"), width = 2000, height = 2000, res=180)
 plot_heatmap(expData, name="normalised")
 dev.off()
 
