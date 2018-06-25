@@ -1,0 +1,62 @@
+amnion
+artery
+axillary lymph node
+bone (os femoris)
+brain meninx
+caecum
+Characteristics[organism part]
+corpora quadrigemina
+corpus striatum
+cortex
+diaphragm
+diencephalon
+dorsal thalamus
+dura mater
+epididymis
+epididymis and seminiferous tubule
+eye
+eyeball of camera-type eye
+Factor Value[organism part]
+forelimb
+globus pallidus
+gonad
+hippocampal formation
+ileum
+intestinal mucosa
+intestine
+left cardiac atrium
+locus ceruleus
+mammary gland
+medulla oblongata
+meninges
+middle frontal gyrus
+middle temporal gyrus
+mitral valve
+muscle (biceps femoris)
+occipital cortex
+occipital lobe
+olfactory apparatus
+olfactory brain
+organ of corti
+oviduct
+parietal lobe
+parotid gland
+penis
+peripheral nervous system
+pineal body
+pulmonary valve
+raphe nuclei
+seminal vesicle
+spinal cord
+submandibular gland
+throat
+thymus
+tongue
+trachea
+tricuspid valve
+umbilical cord
+uterine cervix
+vas deferens
+vesicular gland
+whole body
+whole organism

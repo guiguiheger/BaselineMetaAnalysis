@@ -1,0 +1,7 @@
+"NA"
+"1"	"E-MTAB-5214_GTEX-W5X1_transverse colon"
+"2"	"E-MTAB-5214_GTEX-WFG8_breast"
+"3"	"E-MTAB-5214_GTEX-WFG8_transverse colon"
+"4"	"E-MTAB-5214_GTEX-TSE9_esophagus muscularis mucosa"
+"5"	"E-MTAB-5214_GTEX-TSE9_liver"
+"6"	"E-MTAB-5214_GTEX-WEY5_lower leg skin"
